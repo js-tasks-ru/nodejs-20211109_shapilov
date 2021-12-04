@@ -28,6 +28,7 @@ server.on('request', (req, res) => {
       if (path.dirname(filepath) !== allowDir) {
         res.statusCode = 400;
         res.end('Bad request');
+        return;
       }
 
       fileWritebbleStream = fs.createWriteStream(filepath, {flags:'wx'});
