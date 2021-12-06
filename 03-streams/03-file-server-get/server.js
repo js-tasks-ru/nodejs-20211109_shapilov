@@ -1,4 +1,3 @@
-const url = require('url');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
@@ -18,6 +17,7 @@ server.on('request', (req, res) => {
       if (path.dirname(filepath) !== allowDir) {
         res.statusCode = 400;
         res.end('Bad request');
+        return;
       }
       
       fileStream = fs.createReadStream(filepath);

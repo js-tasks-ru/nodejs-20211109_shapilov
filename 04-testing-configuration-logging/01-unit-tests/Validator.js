@@ -1,5 +1,23 @@
+const ValidatorSettingsError = require('./ValidatorSettingsError');
+
 module.exports = class Validator {
+  _requiredFields = ['type', 'min', 'max'];
+  _supportedType = ['string', 'number'];
+  
   constructor(rules) {
+    for (const fieldValidate of Object.keys(rules)) {
+      let rule = rules[fieldValidate];
+      this._requiredFields.forEach(field => {
+        if (!rule.hasOwnProperty(field)) {
+          throw new ValidatorSettingsError();
+        }
+        if (field === 'type') {
+          if (!this._supportedType.includes(rule[field])) {
+            throw new ValidatorSettingsError();
+          }
+        }
+      })
+    }
     this.rules = rules;
   }
 
@@ -7,6 +25,10 @@ module.exports = class Validator {
     const errors = [];
 
     for (const field of Object.keys(this.rules)) {
+      if (!obj.hasOwnProperty(field)) {
+        continue;
+      }
+
       const rules = this.rules[field];
 
       const value = obj[field];
@@ -31,7 +53,7 @@ module.exports = class Validator {
             errors.push({field, error: `too little, expect ${rules.min}, got ${value}`});
           }
           if (value > rules.max) {
-            errors.push({field, error: `too big, expect ${rules.min}, got ${value}`});
+            errors.push({field, error: `too big, expect ${rules.max}, got ${value}`});
           }
           break;
       }
