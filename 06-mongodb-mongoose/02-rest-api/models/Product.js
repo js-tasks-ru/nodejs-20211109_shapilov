@@ -26,6 +26,7 @@ const productSchema = new mongoose.Schema({
   subcategory: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    index: true,
   },
 
   images: [String],
