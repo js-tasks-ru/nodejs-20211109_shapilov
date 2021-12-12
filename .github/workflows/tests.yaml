@@ -1,0 +1,47 @@
+name: Tests workflow
+
+on: pull_request
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.ci-skip-step.outputs.ci-skip }}
+      skip-not: ${{ steps.ci-skip-step.outputs.ci-skip-not }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: ci-skip-step
+        uses: mstachniuk/ci-skip@master
+        with:
+          commit-filter: 'docker'
+
+  build:
+    needs: init
+
+    name: Run tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16.12.0'
+
+      - if: ${{ needs.init.outputs.skip == 'false' }}
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: '5.0.3'
+
+      - run: npm install
+
+      - if: ${{ needs.init.outputs.skip == 'false' }}
+        run: npm test --silent
+        env:
+          CI: true
+
+      - if: ${{ needs.init.outputs.ci-skip-not == 'false' }}
+        run: make test-silent
+        env:
+          CI: true
