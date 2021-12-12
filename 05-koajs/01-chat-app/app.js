@@ -28,7 +28,7 @@ router.get('/subscribe', async (ctx, next) => {
     message = await longPoll;
   } catch (err) {
     if (err.code === 'CONNECTION_RESET') {
-      return;
+      return next();
     }
 
     throw err;
@@ -38,14 +38,14 @@ router.get('/subscribe', async (ctx, next) => {
 });
 
 router.post('/publish', async (ctx, next) => {
-  const body = ctx.request.body;
+  const {message} = ctx.request.body;
 
-  if (!('message' in body) || body.message === '') {
-    return;
+  if (!message || message === '') {
+    return next();
   }
 
   subscribers.forEach((pollResolve) => {
-    pollResolve(body.message);
+    pollResolve(message);
   });
 
   subscribers = [];
