@@ -43,7 +43,7 @@ jobs:
         env:
           CI: true
 
-      - if: ${{ needs.init.outputs.ci-skip-not == 'false' }}
+      - if: ${{ needs.init.outputs.skip-not == 'false' }}
         run: make test-silent
         env:
           CI: true
