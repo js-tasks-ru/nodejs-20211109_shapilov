@@ -1,7 +1,7 @@
 module.exports = {
   mongodb: {
     uri: (process.env.NODE_ENV === 'test' ?
-      'mongodb://localhost/6-module-1-task' :
-      'mongodb://localhost/any-shop'),
+      'mongodb://mongo/6-module-1-task' :
+      'mongodb://mongo/any-shop'),
   },
 };
