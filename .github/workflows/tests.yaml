@@ -10,6 +10,8 @@ jobs:
       skip-not: ${{ steps.ci-skip-step.outputs.ci-skip-not }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
       - id: ci-skip-step
         uses: mstachniuk/ci-skip@master
         with:
